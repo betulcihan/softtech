@@ -33,6 +33,58 @@ class HomeViewController: UIViewController {
         setupConstraints()
     }
     
+    // MARK: - Setup functions
+    
+    /// Settings of button component.
+    /// - Parameters:
+    ///     - buttonText: title of button.
+    private func setupButton(buttonText: String) {
+        let customButton: UIButton = {
+            let button = UIButton()
+            button.setTitle(buttonText, for: .normal)
+            button.backgroundColor = .brown
+            button.setTitleColor(.white, for: .normal)
+            NSLayoutConstraint.activate([
+                button.widthAnchor.constraint(equalToConstant: 200),
+                button.heightAnchor.constraint(equalToConstant: 50)
+                ])
+            button.translatesAutoresizingMaskIntoConstraints = false
+            return button
+        }()
+        stackView.addArrangedSubview(customButton)
+    }
+
+    /// Settings of label component.
+    /// - Parameters:
+    ///     - labelText: text of label.
+    private func setupLabel(labelText: String) {
+        let customLabel: UILabel = {
+            let label = UILabel()
+            label.text = labelText
+            label.textColor = .systemBlue
+            label.translatesAutoresizingMaskIntoConstraints = false
+            return label
+        }()
+        stackView.addArrangedSubview(customLabel)
+    }
+
+    /// Settings of textField component.
+    /// - Parameters:
+    ///     - placeholder: placeholder for text field.
+    private func setupTextField(placeholder: String) {
+        let customTextField: UITextField = {
+            let textField = UITextField()
+            textField.placeholder = placeholder
+            textField.widthAnchor.constraint(equalToConstant: 200).isActive = true
+            textField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+            textField.font = UIFont.systemFont(ofSize: 15)
+            textField.borderStyle = UITextField.BorderStyle.roundedRect
+            textField.translatesAutoresizingMaskIntoConstraints = false
+            return textField
+        }()
+        stackView.addArrangedSubview(customTextField)
+    }
+    
     /// Add subviews.
     private func configureSubviews() {
         view.addSubview(scrollView)
