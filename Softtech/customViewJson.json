@@ -1,0 +1,45 @@
+[
+    {
+      "CustomViewType": "Button",
+      "properties": {
+          "Text": "Button 1"
+      }
+    },
+    {
+      "CustomViewType": "Label",
+      "properties": {
+          "Text": "Label 1"
+      }
+    },
+    {
+      "CustomViewType": "Button",
+      "properties": {
+          "Text": "Button 2"
+      }
+    },
+    {
+      "CustomViewType": "TextField",
+      "properties": {
+          "Header": "Text Field 1 Header"
+      }
+    },
+    {
+      "CustomViewType": "PickerView",
+      "properties": {
+          "Header": "Picker View",
+          "Text": "[first, second, third]"
+      }
+    },
+     {
+       "CustomViewType": "Label",
+       "properties": {
+           "Text": "Label 2"
+       }
+     },
+     {
+       "CustomViewType": "TextField",
+       "properties": {
+           "Header": "Text Field 2 Header"
+       }
+     },
+]
