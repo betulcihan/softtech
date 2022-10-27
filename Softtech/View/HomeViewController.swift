@@ -1,6 +1,8 @@
 import UIKit
 
 class HomeViewController: UIViewController {
+    var choices: [String] = []
+    private var viewModel = HomeViewModel()
     
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
@@ -24,6 +26,16 @@ class HomeViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
+    
+    private lazy var pickerTextField: UITextField = {
+        let textField = UITextField()
+        textField.widthAnchor.constraint(equalToConstant: 200).isActive = true
+        textField.heightAnchor.constraint(equalToConstant: 50).isActive = true
+        textField.font = UIFont.systemFont(ofSize: 15)
+        textField.borderStyle = UITextField.BorderStyle.roundedRect
+        textField.translatesAutoresizingMaskIntoConstraints = false
+        return textField
+    }()
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +43,28 @@ class HomeViewController: UIViewController {
         
         configureSubviews()
         setupConstraints()
+        getCustomViews()
+    }
+    
+    /// Read json file and create custom view.
+    private func getCustomViews() {
+        let customViews: [CustomView]? = viewModel.fetchData(filename: "customViewJson")
+        guard let customViews = customViews else { return }
+        
+        for customView in customViews {
+            switch customView.customViewType {
+            case ViewType.button.rawValue:
+                setupButton(buttonText: customView.properties?.text ?? "")
+            case ViewType.label.rawValue:
+                setupLabel(labelText: customView.properties?.text ?? "")
+            case ViewType.textField.rawValue:
+                setupTextField(placeholder: customView.properties?.header ?? "")
+            case ViewType.picker.rawValue:
+                setupPickerView(placeholder: customView.properties?.header ?? "", options: customView.properties?.text ?? "")
+            default:
+                print("Default")
+            }
+        }
     }
     
     // MARK: - Setup functions
@@ -85,6 +119,39 @@ class HomeViewController: UIViewController {
         stackView.addArrangedSubview(customTextField)
     }
     
+    /// Settings of pickerView component.
+    /// - Parameters:
+    ///     - placeholder: placeholder for text field.
+    ///     - options: options of picker view.
+    private func setupPickerView(placeholder: String ,options: String) {
+        choices = viewModel.refactorJsonString(jsonText: options)
+        pickerTextFieldSettings()
+        stackView.addArrangedSubview(pickerTextField)
+            let pickerView = UIPickerView()
+            pickerTextField.inputView = pickerView
+            pickerTextField.placeholder = placeholder
+            pickerView.backgroundColor = .systemGray3
+            pickerView.selectRow(0, inComponent: 0, animated: true)
+            pickerView.delegate = self
+            pickerView.dataSource = self
+            pickerView.translatesAutoresizingMaskIntoConstraints = false
+    }
+    
+    /// Settings of pickerTextField component.
+    private func pickerTextFieldSettings() {
+        let imageIcon = UIImageView()
+        imageIcon.image = UIImage(systemName: "chevron.down")
+        imageIcon.tintColor = .systemGray
+        let contentView = UIView()
+        contentView.addSubview(imageIcon)
+        contentView.frame = CGRect(x: 0, y: 0, width: UIImage(systemName: "chevron.down")!.size.width, height: UIImage(systemName: "chevron.down")!.size.height)
+        imageIcon.frame = CGRect(x: -10, y: 0, width: UIImage(systemName: "chevron.down")!.size.width, height: UIImage(systemName: "chevron.down")!.size.height)
+        pickerTextField.rightView = contentView
+        pickerTextField.rightViewMode = .always
+        pickerTextField.delegate = self
+        pickerTextField.tintColor = .clear
+    }
+    
     /// Add subviews.
     private func configureSubviews() {
         view.addSubview(scrollView)
@@ -116,6 +183,31 @@ class HomeViewController: UIViewController {
             stackView.leftAnchor.constraint(equalTo: contentView.leftAnchor)
             ])
     }
+}
 
+// MARK: - HomeViewController Extension
+extension HomeViewController: UIPickerViewDelegate, UIPickerViewDataSource {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
+        return 1
+    }
 
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+        return choices.count
+    }
+
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+        return choices[row]
+    }
+
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        pickerTextField.text = choices[row]
+        pickerTextField.resignFirstResponder()
+    }
+
+}
+
+extension HomeViewController: UITextFieldDelegate {
+    func textField(_ textField: UITextField, shouldChangeCharactersIn range: NSRange, replacementString string: String) -> Bool {
+        return false
+    }
 }
