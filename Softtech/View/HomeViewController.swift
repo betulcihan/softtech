@@ -3,7 +3,8 @@ import UIKit
 class HomeViewController: UIViewController {
     var choices: [String] = []
     private var viewModel = HomeViewModel()
-    
+    let screenSize: CGRect = UIScreen.main.bounds
+
     private lazy var scrollView: UIScrollView = {
         let scrollView = UIScrollView()
         scrollView.backgroundColor = .systemBackground
@@ -26,7 +27,7 @@ class HomeViewController: UIViewController {
         stackView.translatesAutoresizingMaskIntoConstraints = false
         return stackView
     }()
-    
+
     private lazy var pickerTextField: UITextField = {
         let textField = UITextField()
         textField.widthAnchor.constraint(equalToConstant: 200).isActive = true
@@ -40,7 +41,6 @@ class HomeViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         view.backgroundColor = .systemBackground
-        
         configureSubviews()
         setupConstraints()
         getCustomViews()
@@ -66,7 +66,7 @@ class HomeViewController: UIViewController {
             }
         }
     }
-    
+
     // MARK: - Setup functions
     
     /// Settings of button component.
